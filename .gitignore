@@ -1,35 +1,12 @@
-# Dependencies
 node_modules/
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-
-# Build outputs
 dist/
-build/
+*.log
+.DS_Store
+.env
+coverage/
 *.tsbuildinfo
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+.codex-home/
 
-# OS
-.DS_Store
-Thumbs.db
-
-# Test
-coverage/
-
-# Logs
-*.log
-
-# Environment
-.env
-.env.local
-
-# Codex
 .codex/
 .pair-shared/
-.codex-home/
