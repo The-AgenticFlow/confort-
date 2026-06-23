@@ -4,6 +4,43 @@
 
 @layer base {
   body {
-    @apply bg-gray-900 text-white min-h-screen antialiased;
+    @apply bg-arcade-black text-white font-space min-h-screen antialiased;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-md border border-neon-cyan/30 rounded-xl;
+  }
+  
+  .neon-btn {
+    @apply transition-all duration-200 ease-out;
+  }
+  .neon-btn:hover {
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+  }
+  .neon-btn:active {
+    box-shadow: 0 0 25px rgba(0, 255, 204, 0.6);
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(0, 255, 204, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 204, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridScroll 20s linear infinite;
+  }
+
+  .neon-glow {
+    text-shadow: 0 0 10px rgba(0, 255, 204, 0.5), 0 0 20px rgba(0, 255, 204, 0.3), 0 0 40px rgba(0, 255, 204, 0.1);
+  }
+}
+
+@keyframes gridScroll {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 40px;
   }
 }
