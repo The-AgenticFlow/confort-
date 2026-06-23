@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Layout } from './components/Layout'
 
 const timeSlots = [
   { minutes: 30, price: 500 },
@@ -15,7 +16,7 @@ function App() {
   const [step, setStep] = useState('welcome')
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4">
+    <Layout>
       <AnimatePresence mode="wait">
         {step === 'welcome' && (
           <motion.div
@@ -23,14 +24,15 @@ function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="text-center max-w-md w-full"
+            className="text-center w-full"
           >
-            <h1 className="text-4xl font-bold mb-2">Confort Lounge</h1>
-            <p className="text-gray-400 mb-8">Purchase Wi-Fi time quickly</p>
+            <p className="text-white/60 mb-10 text-lg">
+              Purchase Wi-Fi time quickly and securely.
+            </p>
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => setStep('select')}
-              className="btn-primary w-full"
+              className="w-full py-4 rounded-xl font-semibold text-arcade-black bg-neon-cyan neon-btn"
             >
               Get Started
             </motion.button>
@@ -43,10 +45,12 @@ function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="max-w-md w-full space-y-6"
+            className="w-full space-y-6"
           >
-            <h2 className="text-2xl font-bold text-center">Choose a Time Slot</h2>
-            <div className="space-y-3">
+            <h2 className="text-2xl font-bold text-center text-white mb-2">
+              Choose a Time Slot
+            </h2>
+            <div className="space-y-4">
               {timeSlots.map((slot) => (
                 <motion.button
                   key={slot.minutes}
@@ -55,14 +59,14 @@ function App() {
                     setSelectedSlot(slot)
                     setStep('payment')
                   }}
-                  className={`card w-full text-left flex items-center justify-between transition-colors ${
+                  className={`glass-card w-full text-left flex items-center justify-between p-5 transition-all ${
                     selectedSlot?.minutes === slot.minutes
-                      ? 'border-blue-500 bg-gray-700'
-                      : 'hover:bg-gray-700'
+                      ? 'border-neon-cyan/80 bg-white/10'
+                      : 'hover:bg-white/10'
                   }`}
                 >
-                  <span className="font-semibold">{slot.minutes} minutes</span>
-                  <span className="text-blue-400 font-bold">{slot.price} FCFA</span>
+                  <span className="font-semibold text-white">{slot.minutes} minutes</span>
+                  <span className="text-neon-cyan font-bold">{slot.price} FCFA</span>
                 </motion.button>
               ))}
             </div>
@@ -75,22 +79,22 @@ function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="max-w-md w-full space-y-6"
+            className="w-full space-y-6"
           >
-            <h2 className="text-2xl font-bold text-center">
+            <h2 className="text-2xl font-bold text-center text-white">
               {selectedSlot.minutes} min — {selectedSlot.price} FCFA
             </h2>
-            <p className="text-gray-400 text-center">Select a payment method</p>
-            <div className="space-y-3">
+            <p className="text-white/60 text-center">Select a payment method</p>
+            <div className="space-y-4">
               {paymentMethods.map((method) => (
                 <motion.button
                   key={method}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setSelectedMethod(method)}
-                  className={`card w-full text-center font-semibold transition-colors ${
+                  className={`glass-card w-full text-center font-semibold py-4 transition-all ${
                     selectedMethod === method
-                      ? 'border-blue-500 bg-gray-700'
-                      : 'hover:bg-gray-700'
+                      ? 'border-neon-cyan/80 bg-white/10'
+                      : 'hover:bg-white/10'
                   }`}
                 >
                   {method}
@@ -100,13 +104,13 @@ function App() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               disabled={!selectedMethod}
-              className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-4 rounded-xl font-semibold text-arcade-black bg-neon-cyan neon-btn disabled:opacity-40 disabled:cursor-not-allowed"
               onClick={() => setStep('done')}
             >
               Pay Now
             </motion.button>
             <button
-              className="text-gray-400 text-sm w-full text-center mt-2"
+              className="text-white/50 text-sm w-full text-center mt-2 hover:text-white/80 transition-colors"
               onClick={() => setStep('select')}
             >
               Back
@@ -119,15 +123,15 @@ function App() {
             key="done"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="max-w-md w-full text-center space-y-6"
+            className="w-full text-center space-y-6"
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-2xl font-bold">Payment Initiated</h2>
-            <p className="text-gray-400">
+            <h2 className="text-2xl font-bold text-white">Payment Initiated</h2>
+            <p className="text-white/60">
               You selected {selectedSlot.minutes} minutes via {selectedMethod}.
             </p>
             <button
-              className="btn-primary w-full"
+              className="w-full py-4 rounded-xl font-semibold text-arcade-black bg-neon-cyan neon-btn"
               onClick={() => {
                 setStep('welcome')
                 setSelectedSlot(null)
@@ -139,7 +143,7 @@ function App() {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </Layout>
   )
 }
 
