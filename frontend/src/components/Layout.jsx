@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import PropTypes from 'prop-types'
 
 export function Layout({ children }) {
   return (
@@ -36,4 +37,8 @@ export function Layout({ children }) {
       </div>
     </div>
   )
+}
+
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
 }
