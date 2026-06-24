@@ -1,12 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Layout } from './components/Layout'
-
-const timeSlots = [
-  { minutes: 30, price: 500 },
-  { minutes: 60, price: 900 },
-  { minutes: 120, price: 1500 },
-]
+import { TimeSelection } from './components/TimeSelection'
 
 const paymentMethods = ['MOMO', 'ORANGE', 'CRYPTO']
 
@@ -24,56 +19,16 @@ function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="text-center w-full"
+            className="w-full pb-24"
           >
-            <p className="text-white/60 mb-10 text-lg">
-              Purchase Wi-Fi time quickly and securely.
-            </p>
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setStep('select')}
-              className="w-full py-4 rounded-xl font-semibold text-arcade-black bg-neon-cyan neon-btn"
-            >
-              Get Started
-            </motion.button>
+            <TimeSelection
+              selectedSlot={selectedSlot}
+              onSelectSlot={setSelectedSlot}
+            />
           </motion.div>
         )}
 
-        {step === 'select' && (
-          <motion.div
-            key="select"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="w-full space-y-6"
-          >
-            <h2 className="text-2xl font-bold text-center text-white mb-2">
-              Choose a Time Slot
-            </h2>
-            <div className="space-y-4">
-              {timeSlots.map((slot) => (
-                <motion.button
-                  key={slot.minutes}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => {
-                    setSelectedSlot(slot)
-                    setStep('payment')
-                  }}
-                  className={`glass-card w-full text-left flex items-center justify-between p-5 transition-all ${
-                    selectedSlot?.minutes === slot.minutes
-                      ? 'border-neon-cyan/80 bg-white/10'
-                      : 'hover:bg-white/10'
-                  }`}
-                >
-                  <span className="font-semibold text-white">{slot.minutes} minutes</span>
-                  <span className="text-neon-cyan font-bold">{slot.price} FCFA</span>
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {step === 'payment' && (
+{step === 'payment' && (
           <motion.div
             key="payment"
             initial={{ opacity: 0, y: 20 }}
@@ -111,7 +66,7 @@ function App() {
             </motion.button>
             <button
               className="text-white/50 text-sm w-full text-center mt-2 hover:text-white/80 transition-colors"
-              onClick={() => setStep('select')}
+              onClick={() => setStep('welcome')}
             >
               Back
             </button>
@@ -143,6 +98,37 @@ function App() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {step === 'welcome' && (
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          disabled={!selectedSlot}
+          onClick={() => setStep('payment')}
+          animate={
+            selectedSlot
+              ? {
+                  boxShadow: [
+                    '0 0 15px rgba(0, 255, 204, 0.4)',
+                    '0 0 30px rgba(0, 255, 204, 0.8)',
+                    '0 0 15px rgba(0, 255, 204, 0.4)',
+                  ],
+                }
+              : {}
+          }
+          transition={
+            selectedSlot
+              ? {
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }
+              : {}
+          }
+          className="fixed bottom-0 left-0 right-0 py-4 px-4 font-semibold text-arcade-black bg-neon-cyan neon-btn disabled:opacity-40 disabled:cursor-not-allowed m-4 rounded-xl will-change-shadow"
+        >
+          Proceed to Pay
+        </motion.button>
+      )}
     </Layout>
   )
 }
