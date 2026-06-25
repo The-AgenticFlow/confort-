@@ -21,6 +21,11 @@ const itemVariants = {
     y: 0,
     transition: { duration: 0.6 },
   },
+  hover: {
+    y: -8,
+    boxShadow: '0 0 20px rgba(0, 255, 204, 0.5)',
+    transition: { duration: 0.3 },
+  },
 }
 
 export function TimeSelection({ selectedSlot, onSelectSlot }) {
@@ -55,9 +60,10 @@ export function TimeSelection({ selectedSlot, onSelectSlot }) {
           <motion.button
             key={slot.minutes}
             variants={itemVariants}
+            whileHover="hover"
             whileTap={{ scale: 0.95 }}
             onClick={() => onSelectSlot(slot)}
-            className={`glass-card rounded-full p-6 transition-all duration-200 ${
+            className={`glass-card rounded-full p-6 transition-all duration-200 pulse-glow ${
               selectedSlot?.minutes === slot.minutes
                 ? 'bg-neon-cyan text-arcade-black border-neon-cyan shadow-neon-lg'
                 : 'text-white hover:border-neon-cyan/60 hover:bg-white/10'
