@@ -16,28 +16,38 @@ export function Layout({ children }) {
         }}
       />
 
-      {/* Particle background */}
-      <ParticleBackground count={25} intensity={1} />
+      {/* Particle background - reduced on mobile */}
+      <ParticleBackground count={15} intensity={0.6} />
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-start min-h-screen p-4 pt-8">
-        {/* Logo / Header */}
+      {/* Content with safe area support */}
+      <div
+        className="relative z-10 flex flex-col items-center justify-start min-h-screen w-full overflow-y-auto"
+        style={{
+          paddingLeft: 'max(1rem, env(safe-area-inset-left))',
+          paddingRight: 'max(1rem, env(safe-area-inset-right))',
+          paddingTop: 'max(2rem, env(safe-area-inset-top))',
+          paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',
+        }}
+      >
+        {/* Logo / Header - mobile responsive */}
         <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="mb-10 text-center"
+          className="mb-6 md:mb-10 text-center flex-shrink-0"
         >
-          <h1 className="text-4xl font-bold tracking-wider neon-glow text-neon-cyan">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-wider neon-glow text-neon-cyan">
             Confort+
           </h1>
-          <p className="mt-2 text-sm text-white/40 tracking-widest uppercase">
+          <p className="mt-2 text-xs md:text-sm text-white/40 tracking-widest uppercase">
             Premium Wi-Fi Access
           </p>
         </motion.header>
 
-        {/* Main content */}
-        <main className="w-full max-w-md">{children}</main>
+        {/* Main content - responsive max-width */}
+        <main className="w-full max-w-sm md:max-w-md lg:max-w-lg px-4 md:px-0 flex-1 flex flex-col justify-start">
+          {children}
+        </main>
       </div>
     </div>
   )
