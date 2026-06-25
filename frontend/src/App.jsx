@@ -2,13 +2,12 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Layout } from './components/Layout'
 import { TimeSelection } from './components/TimeSelection'
-
-const paymentMethods = ['MOMO', 'ORANGE', 'CRYPTO']
+import { Payment } from './components/Payment'
 
 function App() {
   const [selectedSlot, setSelectedSlot] = useState(null)
-  const [selectedMethod, setSelectedMethod] = useState(null)
   const [step, setStep] = useState('welcome')
+  const [transactionId, setTransactionId] = useState(null)
 
   return (
     <Layout>
@@ -34,67 +33,51 @@ function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="w-full space-y-6"
+            className="w-full pb-24"
           >
-            <h2 className="text-2xl font-bold text-center text-white">
-              {selectedSlot.minutes} min — {selectedSlot.price} FCFA
-            </h2>
-            <p className="text-white/60 text-center">Select a payment method</p>
-            <div className="space-y-4">
-              {paymentMethods.map((method) => (
-                <motion.button
-                  key={method}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setSelectedMethod(method)}
-                  className={`glass-card w-full text-center font-semibold py-4 transition-all ${
-                    selectedMethod === method
-                      ? 'border-neon-cyan/80 bg-white/10'
-                      : 'hover:bg-white/10'
-                  }`}
-                >
-                  {method}
-                </motion.button>
-              ))}
-            </div>
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              disabled={!selectedMethod}
-              className="w-full py-4 rounded-xl font-semibold text-arcade-black bg-neon-cyan neon-btn disabled:opacity-40 disabled:cursor-not-allowed"
-              onClick={() => setStep('done')}
-            >
-              Pay Now
-            </motion.button>
-            <button
-              className="text-white/50 text-sm w-full text-center mt-2 hover:text-white/80 transition-colors"
-              onClick={() => setStep('welcome')}
-            >
-              Back
-            </button>
+            <Payment
+              selectedSlot={selectedSlot}
+              onPaymentComplete={(id) => {
+                setTransactionId(id)
+                setStep('success')
+              }}
+              onBack={() => setStep('welcome')}
+            />
           </motion.div>
         )}
 
-        {step === 'done' && (
+        {step === 'success' && (
           <motion.div
-            key="done"
+            key="success"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full text-center space-y-6"
+            className="w-full text-center space-y-6 pb-24"
           >
-            <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-2xl font-bold text-white">Payment Initiated</h2>
+            <motion.div
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 0.6 }}
+              className="text-6xl mb-4"
+            >
+              🎉
+            </motion.div>
+            <h2 className="text-3xl font-bold text-neon-cyan">Payment Confirmed!</h2>
             <p className="text-white/60">
-              You selected {selectedSlot.minutes} minutes via {selectedMethod}.
+              Your {selectedSlot.minutes}-minute session is ready.
             </p>
-            <button
+            {transactionId && (
+              <p className="text-xs text-white/40">ID: {transactionId}</p>
+            )}
+            <motion.button
+              whileTap={{ scale: 0.95 }}
               className="w-full py-4 rounded-xl font-semibold text-arcade-black bg-neon-cyan neon-btn"
               onClick={() => {
                 setStep('welcome')
                 setSelectedSlot(null)
-                setSelectedMethod(null)
+                setTransactionId(null)
               }}
             >
-              Back to Home
-            </button>
+              Play Another Session
+            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>
