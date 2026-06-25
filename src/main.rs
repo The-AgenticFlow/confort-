@@ -2,6 +2,7 @@ mod config;
 mod models;
 mod crypto;
 mod code_gen;
+mod db;
 
 use actix_web::{middleware, web, App, HttpResponse, HttpServer, Result as ActixResult};
 use config::CONFIG;
