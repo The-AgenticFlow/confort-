@@ -6,12 +6,23 @@ import os
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from confort.code_generator import generate_code
 from confort.db import get_supabase_client
 
 app = FastAPI()
+
+# CORS configuration for production
+allowed_origins = os.getenv("CORS_ORIGIN", "*").split(",")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type", "Authorization"],
+)
 
 
 class InitiateRequest(BaseModel):
