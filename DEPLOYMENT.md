@@ -2,13 +2,13 @@
 
 ## Overview
 
-This guide provides step-by-step instructions for deploying the Confort+ application to production on Vercel with CinetPay payment processing integration.
+This guide provides step-by-step instructions for deploying the Confort+ application to production on Vercel with Fapshi payment processing integration.
 
 ## Prerequisites
 
 - Vercel account (https://vercel.com)
 - GitHub repository access (https://github.com/The-AgenticFlow/confort-)
-- CinetPay merchant account with API credentials
+- Fapshi merchant account with API credentials
 - Supabase project with production database
 - Domain name (optional but recommended)
 
@@ -42,53 +42,37 @@ After deployment, go to **Project Settings** → **Environment Variables** and a
 
 ## Part 2: Backend API Deployment
 
-The backend Python API can be deployed using:
-- **Option A**: Vercel Functions (serverless Python)
-- **Option B**: Separate service (Render, Railway, PythonAnywhere)
+The backend Rust API can be deployed using:
+- **Option A**: Railway (recommended - native Rust support)
+- **Option B**: Render (also supports Rust)
 - **Option C**: Docker container on cloud service
+- **Option D**: Heroku (with custom buildpack)
 
-### Recommended: Option A - Vercel Functions
+### Recommended: Option A - Railway.app
 
-1. Create `api/` directory in root:
-   ```bash
-   mkdir -p api
-   ```
+1. Create Railway account: https://railway.app
+2. Connect your GitHub repository
+3. Railway auto-detects Cargo.toml and builds Rust binary
+4. Set environment variables in Railway dashboard
+5. Deploy automatically on push to main
 
-2. Move your Python API to `api/webhooks/`:
-   ```bash
-   # Copy core modules to serverless functions
-   cp src/confort/api.py api/webhooks/index.py
-   ```
+### Option B - Render.com
 
-3. Create `api/webhooks/requirements.txt`:
-   ```
-   fastapi==0.104.1
-   uvicorn==0.24.0
-   supabase-py==2.0.0
-   python-dotenv==1.0.0
-   pydantic==2.5.0
-   httpx==0.25.2
-   ```
+1. Go to https://render.com
+2. Create new "Web Service"
+3. Connect GitHub repository
+4. Select "Rust" runtime
+5. Set environment variables
+6. Deploy
 
-4. Update `api/webhooks/index.py` for Vercel:
-   - Import `vercel_wsgi` handler
-   - Remove development server code
-   - Configure CORS for your domain
+### Local Development
 
-### Recommended: Option B - Separate Service
+Run the Rust backend locally:
+```bash
+cargo run --bin confort
+```
 
-If you prefer a separate service for the Python backend:
-
-1. Deploy to Render.com:
-   - Create new Web Service
-   - Connect GitHub repository
-   - Set environment variables (see Section 3)
-   - Render will build and deploy automatically
-
-2. Or deploy to Railway.app:
-   - Connect GitHub repository
-   - Add environment variables
-   - Railway will auto-deploy
+The API will start on `http://0.0.0.0:8000` by default.
 
 ## Part 3: Environment Variables Configuration
 
@@ -102,11 +86,11 @@ SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 ```
 
-#### CinetPay (Payment Processing)
+#### Fapshi (Payment Processing)
 ```
-CINETPAY_API_KEY=your-api-key-here
-CINETPAY_SITE_ID=your-site-id-here
-CINETPAY_SECRET_KEY=your-secret-key-here
+FAPSHI_API_USER=your-api-user-here
+FAPSHI_API_KEY=your-api-key-here
+FAPSHI_WEBHOOK_SECRET=your-webhook-secret-here
 ```
 
 #### Binance Pay (Crypto Payments - Optional)
@@ -124,32 +108,34 @@ MANAGER_PIN=1234
 
 **Security:** Use Vercel's environment variable encryption. Never commit secrets to Git.
 
-## Part 4: CinetPay Webhook Configuration
+## Part 4: Fapshi Webhook Configuration
 
 ### Step 4.1: Configure Production Webhook URL
 
-1. Log into your CinetPay merchant dashboard: https://dashboard.cinetpay.com
-2. Navigate to **Settings** → **Webhook Configuration**
+1. Log into your Fapshi merchant dashboard: https://dashboard.fapshi.com
+2. Navigate to **Webhooks** → **Configure**
 3. Set **Production Webhook URL**:
    ```
-   https://your-vercel-domain.vercel.app/api/webhook/cinetpay
+   https://your-api-domain.com/api/webhook/fapshi
    ```
-   or your custom domain:
-   ```
-   https://your-domain.com/api/webhook/cinetpay
-   ```
+   (Replace `your-api-domain.com` with your actual API domain)
 
-4. Leave webhook events as:
-   - Transaction status change
-   - Payment confirmed
+4. Set the **Webhook Secret**:
+   - Generate a strong secret (at least 32 characters)
+   - Copy this secret to `FAPSHI_WEBHOOK_SECRET` environment variable
 
-5. **Save** the configuration
+5. Enable webhook events for:
+   - SUCCESSFUL (payment completed)
+   - FAILED (payment failed)
+   - EXPIRED (payment link expired)
+
+6. **Save** the configuration
 
 ### Step 4.2: Test Webhook Connectivity
 
-1. From CinetPay dashboard, click "Test Webhook"
-2. Verify you receive HTTP 200 response
-3. Check backend logs for the test webhook message
+1. From Fapshi dashboard, click "Send Test Webhook"
+2. Your API should respond with HTTP 200
+3. Check backend logs to verify webhook was received and processed
 
 ## Part 5: QR Code Generation & Printing
 
@@ -157,7 +143,7 @@ MANAGER_PIN=1234
 
 Run the QR code generator locally:
 ```bash
-python src/confort/qr_generator.py https://your-vercel-domain.vercel.app
+cargo run --bin qr_generator -- https://your-vercel-domain.vercel.app
 ```
 
 This will create `confort-qr-code.png` in the current directory.
@@ -187,9 +173,9 @@ Configure the lounge Wi-Fi with a "Walled Garden" / Domain Whitelist:
 3. Add these domains to the whitelist:
    ```
    *.vercel.app (or your custom domain)
-   *.cinetpay.com
-   *.supabase.co
-   *.binance.com
+   *.fapshi.com (Fapshi payment API)
+   *.supabase.co (Database)
+   *.binance.com (Crypto payment - if enabled)
    api.vercel.com (optional, for analytics)
    ```
 

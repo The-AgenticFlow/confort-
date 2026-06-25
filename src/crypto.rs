@@ -1,22 +1,6 @@
 use serde_json::Value;
 use sha2::{Digest, Sha256};
 
-pub fn verify_cinetpay_signature(payload: &Value, api_key: &str) -> bool {
-    if api_key.is_empty() {
-        return false;
-    }
-
-    let signature = match payload.get("signature") {
-        Some(Value::String(s)) => s.clone(),
-        _ => return false,
-    };
-
-    let msg = build_message_string(payload, "signature");
-    let expected_sig = compute_sha256_hex(&(msg + api_key));
-
-    constant_time_compare(&signature, &expected_sig)
-}
-
 pub fn verify_binance_signature(payload: &Value, api_key: &str) -> bool {
     if api_key.is_empty() {
         return false;
@@ -98,46 +82,6 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_cinetpay_signature_valid() {
-        let api_key = "test_key_123";
-        let mut payload = serde_json::json!({
-            "amount": 1000,
-            "currency": "XAF",
-            "ref_number": "TXN001"
-        });
-
-        let msg = "1000XAFTXN001".to_string() + api_key;
-        let signature = compute_sha256_hex(&msg);
-
-        let obj = payload.as_object_mut().unwrap();
-        obj.insert("signature".to_string(), Value::String(signature));
-
-        assert!(verify_cinetpay_signature(&payload, api_key));
-    }
-
-    #[test]
-    fn test_cinetpay_signature_invalid() {
-        let payload = serde_json::json!({
-            "amount": 1000,
-            "currency": "XAF",
-            "ref_number": "TXN001",
-            "signature": "invalid_sig"
-        });
-
-        assert!(!verify_cinetpay_signature(&payload, "test_key_123"));
-    }
-
-    #[test]
-    fn test_missing_api_key() {
-        let payload = serde_json::json!({
-            "amount": 1000,
-            "signature": "some_sig"
-        });
-
-        assert!(!verify_cinetpay_signature(&payload, ""));
-    }
-
-    #[test]
     fn test_binance_signature_valid() {
         let api_key = "binance_key";
         let mut payload = serde_json::json!({
@@ -152,6 +96,27 @@ mod tests {
         obj.insert("signature".to_string(), Value::String(signature));
 
         assert!(verify_binance_signature(&payload, api_key));
+    }
+
+    #[test]
+    fn test_binance_signature_invalid() {
+        let payload = serde_json::json!({
+            "transaction_id": "TXN123",
+            "amount": 500,
+            "signature": "invalid_sig"
+        });
+
+        assert!(!verify_binance_signature(&payload, "binance_key"));
+    }
+
+    #[test]
+    fn test_missing_api_key() {
+        let payload = serde_json::json!({
+            "amount": 1000,
+            "signature": "some_sig"
+        });
+
+        assert!(!verify_binance_signature(&payload, ""));
     }
 
     #[test]

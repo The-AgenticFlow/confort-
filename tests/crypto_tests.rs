@@ -1,4 +1,4 @@
-use confort::crypto::{verify_cinetpay_signature, verify_binance_signature};
+use confort::crypto::verify_binance_signature;
 use confort::code_gen::generate_code;
 use serde_json::json;
 use std::collections::HashSet;
@@ -37,57 +37,6 @@ fn test_generate_code_variation() {
         "Expected at least 50 unique codes in 100 calls, got {}",
         unique_count
     );
-}
-
-#[test]
-fn test_verify_cinetpay_signature_valid() {
-    let api_key = "test_key_cinetpay";
-    let mut payload = json!({
-        "amount": "1000",
-        "currency": "XAF",
-        "customer_name": "Test User",
-        "ref_number": "TXN001"
-    });
-
-    let msg = "1000XAFTest UserTXN001".to_string() + api_key;
-    let signature = compute_sha256_hex(&msg);
-
-    let obj = payload.as_object_mut().unwrap();
-    obj.insert("signature".to_string(), serde_json::Value::String(signature));
-
-    assert!(verify_cinetpay_signature(&payload, api_key));
-}
-
-#[test]
-fn test_verify_cinetpay_signature_invalid() {
-    let payload = json!({
-        "amount": "1000",
-        "currency": "XAF",
-        "ref_number": "TXN001",
-        "signature": "invalid_signature_hash"
-    });
-
-    assert!(!verify_cinetpay_signature(&payload, "test_key_cinetpay"));
-}
-
-#[test]
-fn test_verify_cinetpay_signature_missing_key() {
-    let payload = json!({
-        "amount": "1000",
-        "signature": "some_sig"
-    });
-
-    assert!(!verify_cinetpay_signature(&payload, ""));
-}
-
-#[test]
-fn test_verify_cinetpay_signature_missing_signature() {
-    let payload = json!({
-        "amount": "1000",
-        "currency": "XAF"
-    });
-
-    assert!(!verify_cinetpay_signature(&payload, "test_key"));
 }
 
 #[test]
@@ -133,14 +82,16 @@ fn test_verify_binance_signature_missing_key() {
 fn test_signature_case_sensitive() {
     let api_key = "api_key";
     let mut payload1 = json!({
-        "ref_number": "txn001"
+        "transaction_id": "txn001",
+        "amount": "1000"
     });
     let mut payload2 = json!({
-        "ref_number": "TXN001"
+        "transaction_id": "TXN001",
+        "amount": "1000"
     });
 
-    let msg1 = "txn001".to_string() + api_key;
-    let msg2 = "TXN001".to_string() + api_key;
+    let msg1 = "1000txn001".to_string() + api_key;
+    let msg2 = "1000TXN001".to_string() + api_key;
     let sig1 = compute_sha256_hex(&msg1);
     let sig2 = compute_sha256_hex(&msg2);
 
@@ -149,8 +100,8 @@ fn test_signature_case_sensitive() {
     obj1.insert("signature".to_string(), serde_json::Value::String(sig1.clone()));
     obj2.insert("signature".to_string(), serde_json::Value::String(sig2.clone()));
 
-    assert!(verify_cinetpay_signature(&payload1, api_key));
-    assert!(verify_cinetpay_signature(&payload2, api_key));
+    assert!(verify_binance_signature(&payload1, api_key));
+    assert!(verify_binance_signature(&payload2, api_key));
     assert_ne!(sig1, sig2, "Different inputs should produce different signatures");
 }
 
@@ -188,42 +139,4 @@ fn test_code_gen_valid_char_set() {
             );
         }
     }
-}
-
-#[test]
-fn test_webhook_payload_with_extra_fields() {
-    let api_key = "test_key";
-    let mut payload = json!({
-        "ref_number": "TXN001",
-        "amount": "1000",
-        "extra_field": "should_be_included"
-    });
-
-    // Keys sorted: amount, extra_field, ref_number
-    let msg = "1000should_be_includedTXN001".to_string() + api_key;
-    let signature = compute_sha256_hex(&msg);
-
-    let obj = payload.as_object_mut().unwrap();
-    obj.insert("signature".to_string(), serde_json::Value::String(signature));
-
-    assert!(verify_cinetpay_signature(&payload, api_key));
-}
-
-#[test]
-fn test_webhook_payload_alphabetical_ordering() {
-    let api_key = "test_key";
-
-    let mut payload1 = json!({
-        "z": "z_value",
-        "a": "a_value",
-        "m": "m_value"
-    });
-
-    let msg = "a_valuem_valuez_value".to_string() + api_key;
-    let signature = compute_sha256_hex(&msg);
-
-    let obj = payload1.as_object_mut().unwrap();
-    obj.insert("signature".to_string(), serde_json::Value::String(signature));
-
-    assert!(verify_cinetpay_signature(&payload1, api_key));
 }

@@ -4,10 +4,12 @@ mod crypto;
 mod code_gen;
 mod db;
 mod handlers;
+mod fapshi;
 
 use actix_web::{middleware, web, App, HttpResponse, HttpServer, Result as ActixResult};
 use config::CONFIG;
 use db::SupabaseClient;
+use fapshi::FapshiClient;
 use handlers::AppState;
 
 #[actix_web::main]
@@ -21,7 +23,12 @@ async fn main() -> std::io::Result<()> {
     log::info!("Supabase URL: {}", config.supabase_url);
 
     let db = SupabaseClient::new(config.supabase_url.clone(), config.supabase_service_key.clone());
-    let app_state = web::Data::new(AppState { db });
+    let fapshi = FapshiClient::new(
+        config.fapshi_api_user.clone(),
+        config.fapshi_api_key.clone(),
+        config.fapshi_webhook_secret.clone(),
+    );
+    let app_state = web::Data::new(AppState { db, fapshi });
 
     HttpServer::new(move || {
         let allowed_origins = config.cors_origins.clone();
@@ -49,7 +56,7 @@ async fn main() -> std::io::Result<()> {
             .route("/api/initiate", web::post().to(handlers::initiate_payment))
             .route("/api/transaction/{transaction_id}", web::get().to(handlers::get_transaction))
             .route("/api/verify-code", web::post().to(handlers::verify_code))
-            .route("/api/webhook/cinetpay", web::post().to(handlers::webhook_cinetpay))
+            .route("/api/webhook/fapshi", web::post().to(handlers::webhook_fapshi))
             .route("/api/webhook/crypto", web::post().to(handlers::webhook_crypto))
     })
     .bind(&bind_addr)?

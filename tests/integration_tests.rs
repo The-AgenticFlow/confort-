@@ -38,14 +38,20 @@ fn test_supabase_client_creation() {
 #[test]
 fn test_app_state_creation() {
     use confort::db::SupabaseClient;
+    use confort::fapshi::FapshiClient;
     use confort::handlers::AppState;
 
     let db = SupabaseClient::new(
         "http://localhost:54321".to_string(),
         "test_key".to_string(),
     );
+    let fapshi = FapshiClient::new(
+        "test_user".to_string(),
+        "test_key".to_string(),
+        "test_secret".to_string(),
+    );
 
-    let state = AppState { db };
+    let state = AppState { db, fapshi };
     assert_eq!(state.db.base_url, "http://localhost:54321");
 }
 
@@ -61,7 +67,7 @@ fn test_transaction_data_serialization() {
         amount: 1000,
         payment_method: "MOMO".to_string(),
         created_at: Some("2026-06-25T10:00:00Z".to_string()),
-        cinetpay_trans_id: None,
+        fapshi_trans_id: None,
     };
 
     let json = serde_json::to_string(&tx).unwrap();

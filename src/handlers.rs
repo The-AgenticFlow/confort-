@@ -1,6 +1,7 @@
 use crate::db::{SupabaseClient, DbError};
 use crate::models::{InitiateRequest, InitiateResponse, TransactionResponse, VerifyCodeRequest, VerifyCodeResponse, ProcessPaymentResponse};
-use crate::crypto::{verify_cinetpay_signature, verify_binance_signature};
+use crate::crypto::verify_binance_signature;
+use crate::fapshi::FapshiClient;
 use crate::code_gen::generate_code;
 use actix_web::{web, HttpResponse, HttpRequest, Result as ActixResult};
 use serde_json::Value;
@@ -8,6 +9,7 @@ use serde_json::Value;
 #[derive(Clone)]
 pub struct AppState {
     pub db: SupabaseClient,
+    pub fapshi: FapshiClient,
 }
 
 pub async fn initiate_payment(
@@ -173,18 +175,24 @@ pub async fn process_payment(
     })))
 }
 
-pub async fn webhook_cinetpay(
-    _req: HttpRequest,
+pub async fn webhook_fapshi(
+    req: HttpRequest,
     payload: web::Json<Value>,
     state: web::Data<AppState>,
 ) -> ActixResult<HttpResponse> {
-    if !verify_cinetpay_signature(&payload, &state.db.service_key) {
+    let received_secret = req
+        .headers()
+        .get("x-wh-secret")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("");
+
+    if !state.fapshi.verify_webhook_signature(received_secret) {
         return Ok(HttpResponse::Unauthorized().json(serde_json::json!({
-            "detail": "Invalid signature"
+            "detail": "Invalid webhook signature"
         })));
     }
 
-    match process_payment(&payload, "ref_number", &state.db).await {
+    match process_payment(&payload, "externalId", &state.db).await {
         Ok(response) => Ok(HttpResponse::Ok().json(response)),
         Err(response) => Ok(response),
     }
