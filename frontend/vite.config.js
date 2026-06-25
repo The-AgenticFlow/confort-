@@ -56,4 +56,9 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    watch: {
+      ignored: ['**/node_modules/**', '**/.git/**', '**/dist/**', '**/.venv/**'],
+    },
+  },
 })
