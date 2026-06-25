@@ -64,9 +64,7 @@ async def get_transaction(transaction_id: str):
     supabase = get_supabase_client()
 
     try:
-        response = supabase.table("transactions").select("*").eq(
-            "id", transaction_id
-        ).execute()
+        response = supabase.table("transactions").select("*").eq("id", transaction_id).execute()
 
         if not response.data:
             raise HTTPException(status_code=404, detail="Transaction not found")
