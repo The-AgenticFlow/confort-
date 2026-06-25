@@ -31,6 +31,15 @@ class TransactionResponse(BaseModel):
     amount: int
 
 
+class VerifyCodeRequest(BaseModel):
+    code: str
+
+
+class VerifyCodeResponse(BaseModel):
+    success: bool
+    message: str | None = None
+
+
 @app.post("/api/initiate", response_model=InitiateResponse)
 async def initiate_payment(request: InitiateRequest):
     """Create a PENDING transaction and return its ID."""
@@ -79,6 +88,34 @@ async def get_transaction(transaction_id: str):
         )
     except HTTPException:
         raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/verify-code", response_model=VerifyCodeResponse)
+async def verify_code(request: VerifyCodeRequest):
+    """Verify a code and update transaction status from PAID to USED."""
+    supabase = get_supabase_client()
+
+    try:
+        response = supabase.table("transactions").select("*").eq("code", request.code).execute()
+
+        if not response.data:
+            return VerifyCodeResponse(success=False, message="Invalid code")
+
+        transaction = response.data[0]
+
+        if transaction["status"] == "USED":
+            return VerifyCodeResponse(success=False, message="Code already used")
+
+        if transaction["status"] == "PAID":
+            supabase.table("transactions").update({"status": "USED"}).eq(
+                "id", transaction["id"]
+            ).execute()
+
+            return VerifyCodeResponse(success=True)
+
+        return VerifyCodeResponse(success=False, message="Invalid code status")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
