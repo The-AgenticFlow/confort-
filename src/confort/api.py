@@ -29,12 +29,18 @@ async def initiate_payment(request: InitiateRequest):
     supabase = get_supabase_client()
 
     try:
-        response = supabase.table("transactions").insert({
-            "time_slot": request.time_slot,
-            "amount": request.amount,
-            "payment_method": "MOMO",
-            "status": "PENDING",
-        }).execute()
+        response = (
+            supabase.table("transactions")
+            .insert(
+                {
+                    "time_slot": request.time_slot,
+                    "amount": request.amount,
+                    "payment_method": "MOMO",
+                    "status": "PENDING",
+                }
+            )
+            .execute()
+        )
 
         if not response.data:
             raise HTTPException(status_code=500, detail="Failed to create transaction")
@@ -52,9 +58,7 @@ def verify_cinetpay_signature(payload: dict[str, Any]) -> bool:
     if not api_key or not signature:
         return False
 
-    msg = "".join(
-        str(v) for k, v in sorted(payload.items()) if k != "signature"
-    )
+    msg = "".join(str(v) for k, v in sorted(payload.items()) if k != "signature")
     expected_sig = hashlib.sha256((msg + api_key).encode()).hexdigest()
 
     return hmac.compare_digest(signature, expected_sig)
@@ -68,17 +72,14 @@ def verify_binance_signature(payload: dict[str, Any]) -> bool:
     if not api_key or not signature:
         return False
 
-    msg = "".join(
-        str(v) for k, v in sorted(payload.items()) if k != "signature"
-    )
+    msg = "".join(str(v) for k, v in sorted(payload.items()) if k != "signature")
     expected_sig = hashlib.sha256((msg + api_key).encode()).hexdigest()
 
     return hmac.compare_digest(signature, expected_sig)
 
 
 async def process_payment(
-    payload: dict[str, Any],
-    transaction_id_key: str = "ref_number"
+    payload: dict[str, Any], transaction_id_key: str = "ref_number"
 ) -> dict[str, str]:
     """Generic payment processor for webhook handlers."""
     supabase = get_supabase_client()
@@ -109,11 +110,13 @@ async def process_payment(
         else:
             raise HTTPException(status_code=500, detail="Failed to generate unique code")
 
-        supabase.table("transactions").update({
-            "status": "PAID",
-            "code": code,
-            "cinetpay_trans_id": trans_id,
-        }).eq("id", trans_id).execute()
+        supabase.table("transactions").update(
+            {
+                "status": "PAID",
+                "code": code,
+                "cinetpay_trans_id": trans_id,
+            }
+        ).eq("id", trans_id).execute()
 
         return {"status": "ok"}
     except Exception as e:
@@ -146,4 +149,5 @@ async def webhook_crypto(request: Request):
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

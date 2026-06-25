@@ -20,7 +20,7 @@ def test_generate_code_format():
 
 def test_generate_code_excludes_forbidden_chars():
     """Test that generated codes exclude O, I, 0, 1."""
-    forbidden = set('OoIi01')
+    forbidden = set("OoIi01")
     for _ in range(100):
         code = generate_code()
         assert not any(c in code for c in forbidden)
@@ -49,12 +49,7 @@ def test_verify_cinetpay_signature_valid():
 def test_verify_cinetpay_signature_invalid():
     """Test CinetPay signature verification with invalid signature."""
     api_key = "test_key"
-    payload = {
-        "amount": 1000,
-        "ref_number": "123",
-        "status": "success",
-        "signature": "invalid_sig"
-    }
+    payload = {"amount": 1000, "ref_number": "123", "status": "success", "signature": "invalid_sig"}
 
     with patch.dict("os.environ", {"CINETPAY_API_KEY": api_key}):
         assert verify_cinetpay_signature(payload) is False
@@ -89,7 +84,7 @@ def test_verify_binance_signature_invalid():
         "amount": 1000,
         "transaction_id": "456",
         "status": "success",
-        "signature": "invalid_sig"
+        "signature": "invalid_sig",
     }
 
     with patch.dict("os.environ", {"BINANCE_API_KEY": api_key}):
