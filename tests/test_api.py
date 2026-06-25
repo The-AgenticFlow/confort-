@@ -1,9 +1,12 @@
 """Tests for the Confort payment API."""
 
 import hashlib
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
+
+from fastapi.testclient import TestClient
 
 from confort.api import (
+    app,
     generate_code,
     verify_binance_signature,
     verify_cinetpay_signature,
@@ -89,3 +92,59 @@ def test_verify_binance_signature_invalid():
 
     with patch.dict("os.environ", {"BINANCE_API_KEY": api_key}):
         assert verify_binance_signature(payload) is False
+
+
+client = TestClient(app)
+
+
+def test_verify_code_valid_paid():
+    """Test verifying a valid code with PAID status."""
+    mock_supabase = MagicMock()
+    mock_response = MagicMock()
+    mock_response.data = [{"id": "trans_123", "status": "PAID", "code": "ABC2"}]
+
+    mock_supabase.table.return_value.select.return_value.eq.return_value.execute.return_value = (
+        mock_response
+    )
+
+    with patch("confort.api.get_supabase_client", return_value=mock_supabase):
+        response = client.post("/api/verify-code", json={"code": "ABC2"})
+        assert response.status_code == 200
+        data = response.json()
+        assert data["success"] is True
+
+
+def test_verify_code_already_used():
+    """Test verifying a code that's already been used."""
+    mock_supabase = MagicMock()
+    mock_response = MagicMock()
+    mock_response.data = [{"id": "trans_123", "status": "USED", "code": "ABC2"}]
+
+    mock_supabase.table.return_value.select.return_value.eq.return_value.execute.return_value = (
+        mock_response
+    )
+
+    with patch("confort.api.get_supabase_client", return_value=mock_supabase):
+        response = client.post("/api/verify-code", json={"code": "ABC2"})
+        assert response.status_code == 200
+        data = response.json()
+        assert data["success"] is False
+        assert data["message"] == "Code already used"
+
+
+def test_verify_code_not_found():
+    """Test verifying a code that doesn't exist."""
+    mock_supabase = MagicMock()
+    mock_response = MagicMock()
+    mock_response.data = []
+
+    mock_supabase.table.return_value.select.return_value.eq.return_value.execute.return_value = (
+        mock_response
+    )
+
+    with patch("confort.api.get_supabase_client", return_value=mock_supabase):
+        response = client.post("/api/verify-code", json={"code": "XXXX"})
+        assert response.status_code == 200
+        data = response.json()
+        assert data["success"] is False
+        assert data["message"] == "Invalid code"
