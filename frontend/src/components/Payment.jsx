@@ -40,17 +40,17 @@ export function Payment({ selectedSlot, onPaymentComplete, onBack }) {
 
   if (isLoading) {
     return (
-      <div className="w-full space-y-6 text-center">
+      <div className="w-full space-y-4 md:space-y-6 text-center">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-          className="w-16 h-16 border-4 border-neon-cyan/30 border-t-neon-cyan rounded-full mx-auto"
+          className="w-12 h-12 md:w-16 md:h-16 border-4 border-neon-cyan/30 border-t-neon-cyan rounded-full mx-auto"
         />
-        <p className="text-lg font-semibold text-white">
+        <p className="text-base md:text-lg font-semibold text-white">
           {t('waitingForPayment')}
         </p>
         {transactionId && (
-          <p className="text-sm text-white/60">
+          <p className="text-xs md:text-sm text-white/60">
             {t('transactionId')}: {transactionId}
           </p>
         )}
@@ -59,22 +59,22 @@ export function Payment({ selectedSlot, onPaymentComplete, onBack }) {
   }
 
   return (
-    <div className="w-full space-y-6">
-      <div className="bg-gradient-to-r from-neon-cyan/20 to-neon-cyan/10 rounded-xl p-6 text-center border border-neon-cyan/30">
-        <p className="text-white/60 text-sm mb-2">{t('amountDue')}</p>
-        <h2 className="text-4xl font-bold text-neon-cyan">
+    <div className="w-full space-y-4 md:space-y-6">
+      <div className="bg-gradient-to-r from-neon-cyan/20 to-neon-cyan/10 rounded-xl p-4 md:p-6 text-center border border-neon-cyan/30">
+        <p className="text-white/60 text-xs md:text-sm mb-2">{t('amountDue')}</p>
+        <h2 className="text-3xl md:text-4xl font-bold text-neon-cyan">
           {selectedSlot.price} {t('fcfa')}
         </h2>
-        <p className="text-white/60 text-sm mt-2">
+        <p className="text-white/60 text-xs md:text-sm mt-2">
           {t('playTime', { minutes: selectedSlot.minutes })}
         </p>
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex gap-2 md:gap-4">
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={() => setActiveTab('momo')}
-          className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
+          className={`flex-1 py-2.5 md:py-3 px-2 md:px-4 rounded-lg font-semibold transition-all text-sm md:text-base min-h-touch ${
             activeTab === 'momo'
               ? 'bg-neon-cyan text-arcade-black'
               : 'bg-white/10 text-white hover:bg-white/20'
@@ -85,7 +85,7 @@ export function Payment({ selectedSlot, onPaymentComplete, onBack }) {
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={() => setActiveTab('crypto')}
-          className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
+          className={`flex-1 py-2.5 md:py-3 px-2 md:px-4 rounded-lg font-semibold transition-all text-sm md:text-base min-h-touch ${
             activeTab === 'crypto'
               ? 'bg-neon-cyan text-arcade-black'
               : 'bg-white/10 text-white hover:bg-white/20'
@@ -96,7 +96,7 @@ export function Payment({ selectedSlot, onPaymentComplete, onBack }) {
       </div>
 
       {error && (
-        <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 text-red-200 text-sm">
+        <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 md:p-4 text-red-200 text-xs md:text-sm">
           {error}
         </div>
       )}
@@ -105,16 +105,16 @@ export function Payment({ selectedSlot, onPaymentComplete, onBack }) {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-4"
+          className="space-y-3 md:space-y-4"
         >
-          <p className="text-white/70 text-center text-sm">
+          <p className="text-white/70 text-center text-xs md:text-sm">
             {t('completePayment')}
           </p>
           <motion.button
             whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(0, 255, 204, 0.8)' }}
             whileTap={{ scale: 0.95 }}
             onClick={handleMomoPayment}
-            className="w-full py-4 rounded-xl font-semibold text-arcade-black bg-neon-cyan neon-btn beat"
+            className="w-full py-3 md:py-4 rounded-xl font-semibold text-arcade-black bg-neon-cyan neon-btn beat min-h-touch"
           >
             {t('payButton')}
           </motion.button>
@@ -125,10 +125,10 @@ export function Payment({ selectedSlot, onPaymentComplete, onBack }) {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-4"
+          className="space-y-3 md:space-y-4"
         >
           <ScanEffect isActive={activeTab === 'crypto'} color="#00FFCC" />
-          <p className="text-white/70 text-center text-sm">
+          <p className="text-white/70 text-center text-xs md:text-sm">
             {t('scanWithWallet')}
           </p>
         </motion.div>
@@ -137,7 +137,7 @@ export function Payment({ selectedSlot, onPaymentComplete, onBack }) {
       <motion.button
         whileTap={{ scale: 0.98 }}
         onClick={onBack}
-        className="w-full py-3 rounded-lg font-semibold text-white/60 hover:text-white transition-colors"
+        className="w-full py-2.5 md:py-3 rounded-lg font-semibold text-white/60 hover:text-white transition-colors text-sm md:text-base min-h-touch"
       >
         {t('back')}
       </motion.button>

@@ -16,10 +16,10 @@ const CheckmarkSVG = () => {
 
   return (
     <motion.svg
-      width="120"
-      height="120"
+      width="80"
+      height="80"
       viewBox="0 0 120 120"
-      className="mx-auto mb-8"
+      className="mx-auto mb-4 md:mb-8 md:w-[120px] md:h-[120px]"
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -66,20 +66,20 @@ export function SuccessScreen({ selectedSlot, transactionId, code, onRestart }) 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full text-center space-y-8 pb-24"
+        className="w-full text-center space-y-4 md:space-y-8 pb-16 md:pb-24 px-4"
       >
         {/* Checkmark Animation */}
         <CheckmarkSVG />
 
-        <h2 className="text-3xl font-bold text-neon-cyan">{t('paymentConfirmed')}</h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-neon-cyan">{t('paymentConfirmed')}</h2>
 
-        <div className="space-y-4">
+        <div className="space-y-3 md:space-y-4">
           {displayCode && (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.6 }}
-              className="relative py-8"
+              className="relative py-4 md:py-8"
             >
               {/* Hologram Background Gradient */}
               <motion.div
@@ -95,18 +95,18 @@ export function SuccessScreen({ selectedSlot, transactionId, code, onRestart }) 
                 transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                 className="relative text-center"
               >
-                <div className="text-7xl font-black tracking-widest text-neon-cyan font-mono">
+                <div className="text-5xl md:text-7xl font-black tracking-widest text-neon-cyan font-mono">
                   {displayCode}
                 </div>
               </motion.div>
             </motion.div>
           )}
 
-          <p className="text-white/60">
+          <p className="text-white/60 text-sm md:text-base">
             {t('sessionReady', { minutes: selectedSlot.minutes })}
           </p>
 
-          <p className="text-base font-semibold text-neon-cyan">
+          <p className="text-sm md:text-base font-semibold text-neon-cyan">
             {t('showCodeToManager')}
           </p>
 
@@ -119,7 +119,7 @@ export function SuccessScreen({ selectedSlot, transactionId, code, onRestart }) 
 
         <motion.button
           whileTap={{ scale: 0.95 }}
-          className="w-full py-4 rounded-xl font-semibold text-arcade-black bg-neon-cyan neon-btn"
+          className="w-full py-3 md:py-4 rounded-xl font-semibold text-arcade-black bg-neon-cyan neon-btn min-h-touch text-sm md:text-base"
           onClick={onRestart}
         >
           {t('playAnother')}

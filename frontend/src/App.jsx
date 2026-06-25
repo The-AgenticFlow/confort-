@@ -22,7 +22,7 @@ function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="w-full pb-24"
+            className="w-full pb-24 md:pb-32 px-4"
           >
             <TimeSelection
               selectedSlot={selectedSlot}
@@ -31,13 +31,13 @@ function App() {
           </motion.div>
         )}
 
-{step === 'payment' && (
+        {step === 'payment' && (
           <motion.div
             key="payment"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="w-full pb-24"
+            className="w-full pb-24 md:pb-32 px-4"
           >
             <Payment
               selectedSlot={selectedSlot}
@@ -91,7 +91,7 @@ function App() {
                 }
               : {}
           }
-          className="fixed bottom-0 left-0 right-0 py-4 px-4 font-semibold text-arcade-black bg-neon-cyan neon-btn disabled:opacity-40 disabled:cursor-not-allowed m-4 rounded-xl will-change-shadow"
+          className="fixed bottom-0 left-0 right-0 py-3 md:py-4 px-4 md:px-6 font-semibold text-arcade-black bg-neon-cyan neon-btn disabled:opacity-40 disabled:cursor-not-allowed m-3 md:m-4 rounded-xl will-change-shadow text-sm md:text-base min-h-touch"
         >
           {t('proceedToPay')}
         </motion.button>

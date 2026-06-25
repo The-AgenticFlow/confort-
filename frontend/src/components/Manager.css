@@ -1,9 +1,11 @@
 .pin-screen {
   min-height: 100vh;
+  min-height: 100dvh;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
 }
 
 .pin-screen.shake-red {
@@ -29,35 +31,77 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 90%;
+  padding: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .pin-container {
+    gap: 2rem;
+    padding: 2rem;
+  }
 }
 
 .pin-title {
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   font-weight: bold;
   color: #00d4ff;
   margin: 0;
   text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+  text-align: center;
+  line-height: 1.2;
+}
+
+@media (min-width: 640px) {
+  .pin-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-height: 500px) {
+  .pin-title {
+    font-size: 1.5rem;
+  }
 }
 
 .pin-label {
-  font-size: 1.2rem;
+  font-size: 0.95rem;
   color: #888;
   margin: 0;
 }
 
+@media (min-width: 640px) {
+  .pin-label {
+    font-size: 1.2rem;
+  }
+}
+
 .pin-input {
-  width: 200px;
-  padding: 1rem 1.5rem;
-  font-size: 2rem;
+  width: 100%;
+  max-width: 250px;
+  padding: 0.875rem 1rem;
+  font-size: 1.75rem;
   text-align: center;
-  letter-spacing: 0.5em;
+  letter-spacing: 0.3em;
   background: rgba(0, 212, 255, 0.05);
   border: 2px solid rgba(0, 212, 255, 0.3);
   color: #00d4ff;
   border-radius: 8px;
   transition: all 0.3s ease;
   font-family: 'Courier New', monospace;
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+@media (min-width: 640px) {
+  .pin-input {
+    width: 200px;
+    padding: 1rem 1.5rem;
+    font-size: 2rem;
+    letter-spacing: 0.5em;
+  }
 }
 
 .pin-input:focus {
@@ -69,10 +113,12 @@
 
 .manager-screen {
   min-height: 100vh;
+  min-height: 100dvh;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
 }
 
 .manager-screen.flash-green {
@@ -117,23 +163,47 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 90%;
+  padding: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .manager-container {
+    gap: 2rem;
+    padding: 2rem;
+  }
 }
 
 .manager-title {
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   font-weight: bold;
   color: #00d4ff;
   margin: 0;
   text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .manager-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-height: 500px) {
+  .manager-title {
+    font-size: 1.5rem;
+  }
 }
 
 .code-input {
-  width: 250px;
-  padding: 1.5rem 2rem;
-  font-size: 2rem;
+  width: 100%;
+  max-width: 300px;
+  padding: 0.875rem 1rem;
+  font-size: 1.75rem;
   text-align: center;
-  letter-spacing: 0.5em;
+  letter-spacing: 0.3em;
   background: rgba(0, 212, 255, 0.05);
   border: 2px solid rgba(0, 212, 255, 0.3);
   color: #00d4ff;
@@ -141,6 +211,17 @@
   transition: all 0.3s ease;
   font-family: 'Courier New', monospace;
   text-transform: uppercase;
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+@media (min-width: 640px) {
+  .code-input {
+    width: 250px;
+    padding: 1.5rem 2rem;
+    font-size: 2rem;
+    letter-spacing: 0.5em;
+  }
 }
 
 .code-input:focus {
@@ -170,8 +251,10 @@
 }
 
 .verify-button {
-  padding: 0.75rem 2.5rem;
-  font-size: 1.1rem;
+  width: 100%;
+  max-width: 300px;
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
   font-weight: bold;
   color: #000;
   background: linear-gradient(135deg, #00d4ff, #0099cc);
@@ -181,6 +264,17 @@
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+@media (min-width: 640px) {
+  .verify-button {
+    width: auto;
+    max-width: none;
+    padding: 0.75rem 2.5rem;
+    font-size: 1.1rem;
+  }
 }
 
 .verify-button:hover:not(:disabled) {
@@ -199,36 +293,68 @@
 
 .error-message {
   color: #ff0000;
-  font-size: 1rem;
-  margin: -1rem 0 0 0;
+  font-size: 0.9rem;
+  margin: -1rem 1rem 0 1rem;
   text-align: center;
+}
+
+@media (min-width: 640px) {
+  .error-message {
+    font-size: 1rem;
+    margin: -1rem 0 0 0;
+  }
 }
 
 .success-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .success-container {
+    gap: 2rem;
+    padding: 2rem;
+  }
 }
 
 .success-checkmark {
-  width: 120px;
-  height: 120px;
+  width: 80px;
+  height: 80px;
   color: #00ff00;
   filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.6));
 }
 
+@media (min-width: 640px) {
+  .success-checkmark {
+    width: 120px;
+    height: 120px;
+  }
+}
+
 .success-message {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: #00ff00;
   margin: 0;
   text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .success-message {
+    font-size: 2rem;
+  }
 }
 
 .verify-next-button {
-  padding: 0.75rem 2.5rem;
-  font-size: 1.1rem;
+  width: 100%;
+  max-width: 300px;
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
   font-weight: bold;
   color: #000;
   background: linear-gradient(135deg, #00ff00, #00cc00);
@@ -238,6 +364,17 @@
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+@media (min-width: 640px) {
+  .verify-next-button {
+    width: auto;
+    max-width: none;
+    padding: 0.75rem 2.5rem;
+    font-size: 1.1rem;
+  }
 }
 
 .verify-next-button:hover {
