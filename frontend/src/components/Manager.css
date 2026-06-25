@@ -1,0 +1,250 @@
+.pin-screen {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pin-screen.shake-red {
+  animation: shake-red 0.5s;
+}
+
+@keyframes shake-red {
+  0%, 100% {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+  }
+  25% {
+    background: rgba(255, 0, 0, 0.3);
+  }
+  50% {
+    background: rgba(255, 0, 0, 0.4);
+  }
+  75% {
+    background: rgba(255, 0, 0, 0.3);
+  }
+}
+
+.pin-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.pin-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #00d4ff;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.pin-label {
+  font-size: 1.2rem;
+  color: #888;
+  margin: 0;
+}
+
+.pin-input {
+  width: 200px;
+  padding: 1rem 1.5rem;
+  font-size: 2rem;
+  text-align: center;
+  letter-spacing: 0.5em;
+  background: rgba(0, 212, 255, 0.05);
+  border: 2px solid rgba(0, 212, 255, 0.3);
+  color: #00d4ff;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-family: 'Courier New', monospace;
+}
+
+.pin-input:focus {
+  outline: none;
+  border-color: #00d4ff;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
+  background: rgba(0, 212, 255, 0.1);
+}
+
+.manager-screen {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.manager-screen.flash-green {
+  animation: flash-green 1s;
+}
+
+.manager-screen.flash-red {
+  animation: flash-red 0.5s;
+}
+
+@keyframes flash-green {
+  0%, 100% {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+  }
+  25% {
+    background: rgba(0, 255, 0, 0.3);
+  }
+  50% {
+    background: rgba(0, 255, 0, 0.4);
+  }
+  75% {
+    background: rgba(0, 255, 0, 0.3);
+  }
+}
+
+@keyframes flash-red {
+  0%, 100% {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+  }
+  25% {
+    background: rgba(255, 0, 0, 0.3);
+  }
+  50% {
+    background: rgba(255, 0, 0, 0.4);
+  }
+  75% {
+    background: rgba(255, 0, 0, 0.3);
+  }
+}
+
+.manager-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.manager-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #00d4ff;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.code-input {
+  width: 250px;
+  padding: 1.5rem 2rem;
+  font-size: 2rem;
+  text-align: center;
+  letter-spacing: 0.5em;
+  background: rgba(0, 212, 255, 0.05);
+  border: 2px solid rgba(0, 212, 255, 0.3);
+  color: #00d4ff;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+}
+
+.code-input:focus {
+  outline: none;
+  border-color: #00d4ff;
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.8);
+  background: rgba(0, 212, 255, 0.15);
+}
+
+.code-input.shake {
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-8px);
+  }
+  50% {
+    transform: translateX(8px);
+  }
+  75% {
+    transform: translateX(-8px);
+  }
+}
+
+.verify-button {
+  padding: 0.75rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #000;
+  background: linear-gradient(135deg, #00d4ff, #0099cc);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.verify-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4);
+}
+
+.verify-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.verify-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #ff0000;
+  font-size: 1rem;
+  margin: -1rem 0 0 0;
+  text-align: center;
+}
+
+.success-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.success-checkmark {
+  width: 120px;
+  height: 120px;
+  color: #00ff00;
+  filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.6));
+}
+
+.success-message {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #00ff00;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
+.verify-next-button {
+  padding: 0.75rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #000;
+  background: linear-gradient(135deg, #00ff00, #00cc00);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.verify-next-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 255, 0, 0.4);
+}
+
+.verify-next-button:active {
+  transform: translateY(0);
+}
