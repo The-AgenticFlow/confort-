@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ParticleBurst } from './ParticleBurst'
 
 const CheckmarkSVG = () => {
   const pathVariants = {
@@ -50,6 +51,8 @@ export function SuccessScreen({ selectedSlot, transactionId, code, onRestart }) 
 
   return (
     <>
+      <ParticleBurst isActive={true} intensity={1} direction="all" />
+
       {/* Cyan Flash Animation */}
       <motion.div
         className="fixed inset-0 bg-neon-cyan pointer-events-none"

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { initiatePayment, pollTransactionStatus } from '../lib/api'
+import { ScanEffect } from './ScanEffect'
 
 export function Payment({ selectedSlot, onPaymentComplete, onBack }) {
   const { t } = useTranslation()
@@ -110,9 +111,10 @@ export function Payment({ selectedSlot, onPaymentComplete, onBack }) {
             {t('completePayment')}
           </p>
           <motion.button
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(0, 255, 204, 0.8)' }}
+            whileTap={{ scale: 0.95 }}
             onClick={handleMomoPayment}
-            className="w-full py-4 rounded-xl font-semibold text-arcade-black bg-neon-cyan neon-btn"
+            className="w-full py-4 rounded-xl font-semibold text-arcade-black bg-neon-cyan neon-btn beat"
           >
             {t('payButton')}
           </motion.button>
@@ -125,12 +127,7 @@ export function Payment({ selectedSlot, onPaymentComplete, onBack }) {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
-          <div className="bg-white/5 border border-white/20 rounded-lg aspect-square flex items-center justify-center">
-            <div className="text-center">
-              <p className="text-white/60 text-sm mb-2">{t('scanQrCode')}</p>
-              <p className="text-white/40 text-xs">{t('binancePayQr')}</p>
-            </div>
-          </div>
+          <ScanEffect isActive={activeTab === 'crypto'} color="#00FFCC" />
           <p className="text-white/70 text-center text-sm">
             {t('scanWithWallet')}
           </p>

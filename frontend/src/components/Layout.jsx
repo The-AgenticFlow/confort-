@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import PropTypes from 'prop-types'
+import { ParticleBackground } from './ParticleBackground'
 
 export function Layout({ children }) {
   return (
@@ -14,6 +15,9 @@ export function Layout({ children }) {
           animation: 'gridScroll 20s linear infinite',
         }}
       />
+
+      {/* Particle background */}
+      <ParticleBackground count={25} intensity={1} />
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-start min-h-screen p-4 pt-8">
