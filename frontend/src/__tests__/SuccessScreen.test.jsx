@@ -13,6 +13,7 @@ describe('SuccessScreen', () => {
       <SuccessScreen
         selectedSlot={mockSlot}
         transactionId="txn_123"
+        code="ABCD"
         onRestart={() => {}}
       />
     )
@@ -26,11 +27,12 @@ describe('SuccessScreen', () => {
       <SuccessScreen
         selectedSlot={mockSlot}
         transactionId="txn_abc123"
+        code="ABCD"
         onRestart={() => {}}
       />
     )
 
-    expect(screen.getByText(/ID: txn_abc123/)).toBeInTheDocument()
+    expect(screen.getByText(/Transaction ID: txn_abc123/)).toBeInTheDocument()
   })
 
   it('should call onRestart when button clicked', async () => {
@@ -41,6 +43,7 @@ describe('SuccessScreen', () => {
       <SuccessScreen
         selectedSlot={mockSlot}
         transactionId="txn_123"
+        code="ABCD"
         onRestart={mockRestart}
       />
     )
@@ -51,15 +54,45 @@ describe('SuccessScreen', () => {
     expect(mockRestart).toHaveBeenCalled()
   })
 
-  it('should render celebration emoji', () => {
+  it('should render checkmark SVG', () => {
     const { container } = render(
       <SuccessScreen
         selectedSlot={mockSlot}
         transactionId="txn_123"
+        code="ABCD"
         onRestart={() => {}}
       />
     )
 
-    expect(container.textContent).toMatch(/🎉/)
+    const svg = container.querySelector('svg')
+    expect(svg).toBeInTheDocument()
+  })
+
+  it('should display hologram code', () => {
+    render(
+      <SuccessScreen
+        selectedSlot={mockSlot}
+        transactionId="txn_123"
+        code="ABCD"
+        onRestart={() => {}}
+      />
+    )
+
+    expect(screen.getByText('ABCD')).toBeInTheDocument()
+  })
+
+  it('should display instructional text', () => {
+    render(
+      <SuccessScreen
+        selectedSlot={mockSlot}
+        transactionId="txn_123"
+        code="ABCD"
+        onRestart={() => {}}
+      />
+    )
+
+    expect(
+      screen.getByText('Show this code to the Manager to start your session.')
+    ).toBeInTheDocument()
   })
 })
