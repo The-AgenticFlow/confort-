@@ -7,7 +7,9 @@ pub static CONFIG: Lazy<Config> = Lazy::new(|| Config::from_env());
 pub struct Config {
     pub supabase_url: String,
     pub supabase_service_key: String,
-    pub cinetpay_api_key: String,
+    pub fapshi_api_user: String,
+    pub fapshi_api_key: String,
+    pub fapshi_webhook_secret: String,
     pub binance_api_key: String,
     pub cors_origins: Vec<String>,
     pub server_port: u16,
@@ -21,7 +23,11 @@ impl Config {
             .expect("SUPABASE_URL must be set");
         let supabase_service_key = env::var("SUPABASE_SERVICE_KEY")
             .expect("SUPABASE_SERVICE_KEY must be set");
-        let cinetpay_api_key = env::var("CINETPAY_API_KEY")
+        let fapshi_api_user = env::var("FAPSHI_API_USER")
+            .unwrap_or_default();
+        let fapshi_api_key = env::var("FAPSHI_API_KEY")
+            .unwrap_or_default();
+        let fapshi_webhook_secret = env::var("FAPSHI_WEBHOOK_SECRET")
             .unwrap_or_default();
         let binance_api_key = env::var("BINANCE_API_KEY")
             .unwrap_or_default();
@@ -41,7 +47,9 @@ impl Config {
         Config {
             supabase_url,
             supabase_service_key,
-            cinetpay_api_key,
+            fapshi_api_user,
+            fapshi_api_key,
+            fapshi_webhook_secret,
             binance_api_key,
             cors_origins,
             server_port,

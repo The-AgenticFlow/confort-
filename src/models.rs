@@ -46,5 +46,5 @@ pub struct TransactionData {
     pub amount: u32,
     pub payment_method: String,
     pub created_at: Option<String>,
-    pub cinetpay_trans_id: Option<String>,
+    pub fapshi_trans_id: Option<String>,
 }

@@ -34,13 +34,13 @@ Set these in your backend deployment service (Vercel Functions, Render, Railway,
 
 ### Payment Processing
 
-#### CinetPay (Mobile Money - MTN, Orange)
+#### Fapshi (Mobile Money - MTN, Orange)
 
 | Variable | Description | Source | Required |
 |----------|-------------|--------|----------|
-| `CINETPAY_API_KEY` | CinetPay API key | CinetPay Dashboard → Settings → API Credentials | Yes |
-| `CINETPAY_SITE_ID` | CinetPay Site ID | CinetPay Dashboard → Settings → Site Configuration | Yes |
-| `CINETPAY_SECRET_KEY` | CinetPay secret key for webhook verification | CinetPay Dashboard → Settings → Security | Yes |
+| `FAPSHI_API_USER` | Fapshi API user | Fapshi Dashboard → Settings → API Credentials | Yes |
+| `FAPSHI_API_KEY` | Fapshi API key | Fapshi Dashboard → Settings → API Credentials | Yes |
+| `FAPSHI_WEBHOOK_SECRET` | Fapshi webhook secret for signature verification | Fapshi Dashboard → Webhooks → Configure Secret | Yes |
 
 #### Binance Pay (Crypto Payments)
 
@@ -80,15 +80,17 @@ Set these in your backend deployment service (Vercel Functions, Render, Railway,
 
 ⚠️ **Never use the anon key** — it has limited permissions. Always use Service Role key for backend.
 
-### Step 2: CinetPay Configuration
+### Step 2: Fapshi Configuration
 
-1. Go to https://dashboard.cinetpay.com
+1. Go to https://dashboard.fapshi.com
 2. Log in with merchant account
-3. Navigate to **Settings** → **API Credentials** or **Integration**
+3. Navigate to **Settings** → **API Credentials**
 4. Copy:
-   - **API Key** → `CINETPAY_API_KEY`
-   - **Site ID** → `CINETPAY_SITE_ID`
-   - **API Secret** → `CINETPAY_SECRET_KEY`
+   - **API User** → `FAPSHI_API_USER`
+   - **API Key** → `FAPSHI_API_KEY`
+5. Navigate to **Webhooks** → **Configure** and set webhook secret
+6. Copy:
+   - **Webhook Secret** → `FAPSHI_WEBHOOK_SECRET`
 
 ### Step 3: Binance Pay Configuration (Optional)
 
@@ -108,9 +110,9 @@ VITE_API_BASE_URL=http://localhost:8000
 VITE_MANAGER_PIN=1234
 ```
 
-Run backend locally:
+Run backend locally (Rust):
 ```bash
-python -m uvicorn src.confort.api:app --host 0.0.0.0 --port 8000 --reload
+cargo run --bin confort
 ```
 
 Run frontend locally:
@@ -126,9 +128,9 @@ Create `.env` in project root:
 ```
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-CINETPAY_API_KEY=your-api-key
-CINETPAY_SITE_ID=your-site-id
-CINETPAY_SECRET_KEY=your-secret-key
+FAPSHI_API_USER=your-api-user
+FAPSHI_API_KEY=your-api-key
+FAPSHI_WEBHOOK_SECRET=your-webhook-secret
 MANAGER_PIN=1234
 ```
 

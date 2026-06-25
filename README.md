@@ -1,10 +1,10 @@
 # Confort+ — Anti-Fraud Payment & Session Management System
 
-Confort+ is a modern, production-grade payment and session management system designed for secure, fraud-resistant customer interactions. Built with React (frontend) and Rust/Actix-web (backend), it integrates with CinetPay and Binance Pay for flexible payment options.
+Confort+ is a modern, production-grade payment and session management system designed for secure, fraud-resistant customer interactions. Built with React (frontend) and Rust/Actix-web (backend), it integrates with Fapshi and Binance Pay for flexible payment options.
 
 ## 🎯 Key Features
 
-- **Payment Processing**: Secure integration with CinetPay (mobile money) and Binance Pay (cryptocurrency)
+- **Payment Processing**: Secure integration with Fapshi (mobile money) and Binance Pay (cryptocurrency)
 - **Anti-Fraud Protection**: Multi-layered security including unique codes, screenshot-resistant hologram effects, and webhook signature verification
 - **Manager Portal**: Secure code verification interface with PIN authentication
 - **PWA Support**: Offline-capable Progressive Web App with service worker caching
@@ -68,8 +68,9 @@ VITE_MANAGER_PIN=1234
 ```
 SUPABASE_URL=your_supabase_project_url
 SUPABASE_SERVICE_KEY=your_service_role_key
-CINETPAY_API_KEY=your_cinetpay_api_key
-CINETPAY_SECRET_KEY=your_cinetpay_secret_key
+FAPSHI_API_USER=your_fapshi_api_user
+FAPSHI_API_KEY=your_fapshi_api_key
+FAPSHI_WEBHOOK_SECRET=your_fapshi_webhook_secret
 BINANCE_API_KEY=your_binance_api_key
 BINANCE_SECRET_KEY=your_binance_secret_key
 CORS_ORIGIN=http://localhost:5173
