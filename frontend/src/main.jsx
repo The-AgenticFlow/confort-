@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import App from './App.jsx'
 import { Manager } from './components/Manager'
+import './i18n/config'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
