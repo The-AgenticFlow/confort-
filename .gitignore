@@ -6,6 +6,11 @@ dist/
 build/
 .venv/
 
+# Rust
+/target
+Cargo.lock
+.DS_Store
+
 # Agent tooling
 .agents/
 .pair-shared/
