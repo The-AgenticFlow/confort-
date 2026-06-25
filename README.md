@@ -8,7 +8,16 @@ Confort+ is a modern, production-grade payment and session management system des
 - **Anti-Fraud Protection**: Multi-layered security including unique codes, screenshot-resistant hologram effects, and webhook signature verification
 - **Manager Portal**: Secure code verification interface with PIN authentication
 - **PWA Support**: Offline-capable Progressive Web App with service worker caching
+- **Multi-Language Support**: French as primary language with English fallback (powered by react-i18next)
 - **Production Ready**: Comprehensive deployment documentation, security audits, and QA procedures
+
+## 🌐 Language Support
+
+The application is fully localized in French, with English available as a fallback. All UI text, buttons, labels, and messages display in French by default. The localization system uses [react-i18next](https://react.i18next.com/) for easy maintenance and potential future language additions.
+
+Supported languages:
+- 🇫🇷 Français (Primary)
+- 🇬🇧 English (Fallback)
 
 ## 📋 Project Structure
 

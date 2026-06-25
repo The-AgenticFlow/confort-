@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import './Manager.css'
 
 export function Manager() {
+  const { t } = useTranslation()
   const [pinEntry, setPinEntry] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [codeEntry, setCodeEntry] = useState('')
@@ -34,7 +36,7 @@ export function Manager() {
 
   const handleVerifyCode = async () => {
     if (codeEntry.length !== 4) {
-      setErrorMessage('Code must be 4 characters')
+      setErrorMessage(t('codeLength'))
       setVerificationState('error')
       setIsShaking(true)
       setTimeout(() => setIsShaking(false), 500)
@@ -60,7 +62,7 @@ export function Manager() {
           setVerificationState(null)
         }, 2000)
       } else {
-        setErrorMessage(data.message || 'Verification failed')
+        setErrorMessage(data.message || t('verificationFailed'))
         setVerificationState('error')
         setIsFlashing(true)
         setTimeout(() => setIsFlashing(false), 500)
@@ -68,7 +70,7 @@ export function Manager() {
         setTimeout(() => setIsShaking(false), 500)
       }
     } catch (error) {
-      setErrorMessage('Network error')
+      setErrorMessage(t('networkError'))
       setVerificationState('error')
       setIsShaking(true)
       setTimeout(() => setIsShaking(false), 500)
@@ -89,8 +91,8 @@ export function Manager() {
         animate={{ opacity: 1 }}
       >
         <div className="pin-container">
-          <h1 className="pin-title">Manager Portal</h1>
-          <p className="pin-label">Enter PIN</p>
+          <h1 className="pin-title">{t('managerPortal')}</h1>
+          <p className="pin-label">{t('enterPin')}</p>
           <motion.input
             type="password"
             value={pinEntry}
@@ -105,7 +107,7 @@ export function Manager() {
             }}
           />
           <button onClick={handlePinSubmit} className="verify-button">
-            Submit
+            {t('submit')}
           </button>
         </div>
       </motion.div>
@@ -143,19 +145,19 @@ export function Manager() {
               transition={{ duration: 0.8 }}
             />
           </motion.svg>
-          <p className="success-message">Code Verified!</p>
+          <p className="success-message">{t('codeVerified')}</p>
           <button onClick={handleVerifyNext} className="verify-next-button">
-            Verify Next
+            {t('verifyNext')}
           </button>
         </motion.div>
       ) : (
         <div className="manager-container">
-          <h1 className="manager-title">Code Verification</h1>
+          <h1 className="manager-title">{t('codeVerification')}</h1>
           <motion.input
             type="text"
             value={codeEntry}
             onChange={handleCodeInput}
-            placeholder="Enter Code"
+            placeholder={t('enterCode')}
             maxLength={4}
             className={`code-input ${isShaking ? 'shake' : ''}`}
             animate={isShaking ? { x: [-8, 8, -8, 8, 0] } : {}}
@@ -178,7 +180,7 @@ export function Manager() {
             className="verify-button"
             disabled={codeEntry.length !== 4}
           >
-            Verify
+            {t('verify')}
           </button>
         </div>
       )}
