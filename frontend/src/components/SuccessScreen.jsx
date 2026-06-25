@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const CheckmarkSVG = () => {
   const pathVariants = {
@@ -40,6 +41,7 @@ const CheckmarkSVG = () => {
 }
 
 export function SuccessScreen({ selectedSlot, transactionId, code, onRestart }) {
+  const { t } = useTranslation()
   const [displayCode, setDisplayCode] = useState(code)
 
   useEffect(() => {
@@ -66,7 +68,7 @@ export function SuccessScreen({ selectedSlot, transactionId, code, onRestart }) 
         {/* Checkmark Animation */}
         <CheckmarkSVG />
 
-        <h2 className="text-3xl font-bold text-neon-cyan">Payment Confirmed!</h2>
+        <h2 className="text-3xl font-bold text-neon-cyan">{t('paymentConfirmed')}</h2>
 
         <div className="space-y-4">
           {displayCode && (
@@ -98,15 +100,17 @@ export function SuccessScreen({ selectedSlot, transactionId, code, onRestart }) 
           )}
 
           <p className="text-white/60">
-            Your {selectedSlot.minutes}-minute session is ready.
+            {t('sessionReady', { minutes: selectedSlot.minutes })}
           </p>
 
           <p className="text-base font-semibold text-neon-cyan">
-            Show this code to the Manager to start your session.
+            {t('showCodeToManager')}
           </p>
 
           {transactionId && (
-            <p className="text-xs text-white/40">Transaction ID: {transactionId}</p>
+            <p className="text-xs text-white/40">
+              {t('transactionId')}: {transactionId}
+            </p>
           )}
         </div>
 
@@ -115,7 +119,7 @@ export function SuccessScreen({ selectedSlot, transactionId, code, onRestart }) 
           className="w-full py-4 rounded-xl font-semibold text-arcade-black bg-neon-cyan neon-btn"
           onClick={onRestart}
         >
-          Play Another Session
+          {t('playAnother')}
         </motion.button>
       </motion.div>
     </>

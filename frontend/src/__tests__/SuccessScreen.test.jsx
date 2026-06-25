@@ -18,8 +18,8 @@ describe('SuccessScreen', () => {
       />
     )
 
-    expect(screen.getByText('Payment Confirmed!')).toBeInTheDocument()
-    expect(screen.getByText(/30-minute session/)).toBeInTheDocument()
+    expect(screen.getByText('Paiement confirmé!')).toBeInTheDocument()
+    expect(screen.getByText(/Votre session de 30 minutes/)).toBeInTheDocument()
   })
 
   it('should display transaction ID', () => {
@@ -32,7 +32,7 @@ describe('SuccessScreen', () => {
       />
     )
 
-    expect(screen.getByText(/Transaction ID: txn_abc123/)).toBeInTheDocument()
+    expect(screen.getByText(/Identifiant de transaction: txn_abc123/)).toBeInTheDocument()
   })
 
   it('should call onRestart when button clicked', async () => {
@@ -48,7 +48,7 @@ describe('SuccessScreen', () => {
       />
     )
 
-    const button = screen.getByText('Play Another Session')
+    const button = screen.getByText('Jouer une autre session')
     await user.click(button)
 
     expect(mockRestart).toHaveBeenCalled()
@@ -92,7 +92,7 @@ describe('SuccessScreen', () => {
     )
 
     expect(
-      screen.getByText('Show this code to the Manager to start your session.')
+      screen.getByText('Montrez ce code au Manager pour commencer votre session.')
     ).toBeInTheDocument()
   })
 })

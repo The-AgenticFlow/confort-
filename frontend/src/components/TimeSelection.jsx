@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { timeSlots } from '../constants/timeSlots'
 
 const containerVariants = {
@@ -23,22 +24,24 @@ const itemVariants = {
 }
 
 export function TimeSelection({ selectedSlot, onSelectSlot }) {
+  const { t } = useTranslation()
+
   const formatTime = (minutes) => {
     if (minutes >= 60) {
       const hours = minutes / 60
-      return `${hours} Hour${hours > 1 ? 's' : ''}`
+      return `${hours} ${hours > 1 ? t('hours') : t('hour')}`
     }
-    return `${minutes} Mins`
+    return `${minutes} ${t('minutes')}`
   }
 
   return (
     <div className="w-full space-y-10">
       <div className="text-center space-y-2 mb-8">
         <h1 className="text-3xl font-bold text-white neon-glow">
-          WELCOME TO CONFORT+
+          {t('welcome')}
         </h1>
         <h2 className="text-2xl font-semibold text-neon-cyan neon-glow">
-          SELECT PLAY TIME
+          {t('selectPlayTime')}
         </h2>
       </div>
 
@@ -65,7 +68,7 @@ export function TimeSelection({ selectedSlot, onSelectSlot }) {
                 {formatTime(slot.minutes)}
               </div>
               <div className="text-sm font-semibold">
-                {slot.price} FCFA
+                {slot.price} {t('fcfa')}
               </div>
             </div>
           </motion.button>

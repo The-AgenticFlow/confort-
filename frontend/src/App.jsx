@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { Layout } from './components/Layout'
 import { TimeSelection } from './components/TimeSelection'
 import { Payment } from './components/Payment'
 import { SuccessScreen } from './components/SuccessScreen'
 
 function App() {
+  const { t } = useTranslation()
   const [selectedSlot, setSelectedSlot] = useState(null)
   const [step, setStep] = useState('welcome')
   const [transactionId, setTransactionId] = useState(null)
@@ -91,7 +93,7 @@ function App() {
           }
           className="fixed bottom-0 left-0 right-0 py-4 px-4 font-semibold text-arcade-black bg-neon-cyan neon-btn disabled:opacity-40 disabled:cursor-not-allowed m-4 rounded-xl will-change-shadow"
         >
-          Proceed to Pay
+          {t('proceedToPay')}
         </motion.button>
       )}
     </Layout>

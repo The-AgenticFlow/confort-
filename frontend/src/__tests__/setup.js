@@ -2,6 +2,25 @@
 import '@testing-library/jest-dom'
 import { vi } from 'vitest'
 import React from 'react'
+import fr from '../i18n/locales/fr.json'
+
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key, options) => {
+      let text = fr[key] || key
+      if (options) {
+        Object.keys(options).forEach((k) => {
+          text = text.replace(`{{${k}}}`, options[k])
+        })
+      }
+      return text
+    },
+  }),
+  initReactI18next: {
+    type: '3rdParty',
+    init: vi.fn(),
+  },
+}))
 
 vi.mock('framer-motion', () => {
   const createMotionComponent = (Component) =>
