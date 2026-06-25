@@ -27,8 +27,8 @@ impl std::error::Error for DbError {}
 #[derive(Clone)]
 pub struct SupabaseClient {
     http_client: Client,
-    base_url: String,
-    service_key: String,
+    pub base_url: String,
+    pub service_key: String,
 }
 
 impl SupabaseClient {
