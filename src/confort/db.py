@@ -1,6 +1,7 @@
 """Supabase database client initialization."""
 
 import os
+
 from supabase import create_client
 
 
