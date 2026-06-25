@@ -22,3 +22,55 @@ export async function initiatePayment(timeSlot, amount) {
     )
   }
 }
+
+export async function pollTransactionStatus(transactionId, options = {}) {
+  const {
+    maxAttempts = 120,
+    pollInterval = 500,
+    onProgress = null,
+  } = options
+
+  let attempts = 0
+  const startTime = Date.now()
+
+  const poll = async () => {
+    attempts++
+    try {
+      const response = await apiClient.get(`/api/transaction/${transactionId}`)
+      const { status } = response.data
+
+      if (onProgress) {
+        onProgress({
+          attempts,
+          maxAttempts,
+          elapsed: Date.now() - startTime,
+          status,
+        })
+      }
+
+      if (status === 'PAID') {
+        return response.data
+      }
+
+      if (attempts >= maxAttempts) {
+        throw new Error('Payment polling timeout')
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, pollInterval))
+      return poll()
+    } catch (error) {
+      if (error.response?.status === 404) {
+        throw new Error('Transaction not found')
+      }
+      if (attempts >= maxAttempts) {
+        throw new Error(
+          error.message || 'Failed to verify payment status'
+        )
+      }
+      await new Promise((resolve) => setTimeout(resolve, pollInterval))
+      return poll()
+    }
+  }
+
+  return poll()
+}

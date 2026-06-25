@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { initiatePayment } from '../lib/api'
+import { initiatePayment, pollTransactionStatus } from '../lib/api'
 
 export function Payment({ selectedSlot, onPaymentComplete, onBack }) {
   const [activeTab, setActiveTab] = useState('momo')
@@ -19,11 +19,16 @@ export function Payment({ selectedSlot, onPaymentComplete, onBack }) {
       )
       setTransactionId(response.id)
 
-      // Simulate waiting for payment confirmation
-      // In production, this would poll or use Supabase realtime subscription
-      setTimeout(() => {
-        onPaymentComplete(response.id)
-      }, 5000)
+      await pollTransactionStatus(response.id, {
+        maxAttempts: 120,
+        pollInterval: 500,
+        onProgress: (progress) => {
+          // Can update UI with progress if needed
+          console.log('Poll progress:', progress)
+        },
+      })
+
+      onPaymentComplete(response.id)
     } catch (err) {
       setError(err.message)
       setIsLoading(false)
