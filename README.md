@@ -1,6 +1,6 @@
 # Confort+ — Anti-Fraud Payment & Session Management System
 
-Confort+ is a modern, production-grade payment and session management system designed for secure, fraud-resistant customer interactions. Built with React (frontend) and FastAPI (backend), it integrates with CinetPay and Binance Pay for flexible payment options.
+Confort+ is a modern, production-grade payment and session management system designed for secure, fraud-resistant customer interactions. Built with React (frontend) and Rust/Actix-web (backend), it integrates with CinetPay and Binance Pay for flexible payment options.
 
 ## 🎯 Key Features
 
@@ -22,14 +22,18 @@ Confort+ is a modern, production-grade payment and session management system des
 │   ├── package.json
 │   └── vite.config.js
 │
-├── src/                        # FastAPI backend (Python)
-│   └── confort/
-│       ├── api.py              # API endpoints (payment, verification, webhooks)
-│       ├── db.py               # Supabase database client
-│       ├── code_generator.py    # Unique code generation
-│       └── qr_generator.py      # QR code utility
+├── src/                        # Rust backend (Actix-web)
+│   ├── main.rs                 # HTTP server, routes, middleware
+│   ├── config.rs               # Environment variable loading
+│   ├── handlers.rs             # API endpoints (payment, verification, webhooks)
+│   ├── db.rs                   # Supabase HTTP REST API client
+│   ├── models.rs               # Request/Response schemas
+│   ├── crypto.rs               # HMAC-SHA256 signature verification
+│   ├── code_gen.rs             # 4-char unique code generation
+│   └── lib.rs                  # Library module exports
 │
-├── tests/                      # Backend unit tests
+├── tests/                      # Integration & crypto tests
+├── Cargo.toml                  # Rust project manifest
 └── DEPLOYMENT.md              # Production deployment guide
 ```
 
@@ -38,8 +42,9 @@ Confort+ is a modern, production-grade payment and session management system des
 ### Prerequisites
 
 - Node.js 18+ (frontend)
-- Python 3.9+ (backend)
+- Rust 1.70+ (backend)
 - npm or yarn (frontend package manager)
+- Cargo (Rust build system)
 
 ### Frontend Setup
 
@@ -59,25 +64,27 @@ VITE_MANAGER_PIN=1234
 
 ### Backend Setup
 
-```bash
-# Install Python dependencies
-pip install -r pyproject.toml
-
-# Create .env file in project root
+**Create .env file in project root**:
+```
 SUPABASE_URL=your_supabase_project_url
-SUPABASE_KEY=your_service_role_key
+SUPABASE_SERVICE_KEY=your_service_role_key
 CINETPAY_API_KEY=your_cinetpay_api_key
 CINETPAY_SECRET_KEY=your_cinetpay_secret_key
 BINANCE_API_KEY=your_binance_api_key
 BINANCE_SECRET_KEY=your_binance_secret_key
+CORS_ORIGIN=http://localhost:5173
 ```
 
-**Start the backend**:
+**Build and run the backend**:
 ```bash
-uvicorn src.confort.api:app --reload
+# Build dependencies and server
+cargo build --release
+
+# Run the server
+cargo run --release
 ```
 
-The backend API will be available at `http://localhost:8000`.
+The backend API will be available at `http://localhost:8000`. The release build produces a single deployable binary in `target/release/confort` (~7.3MB) with no Python runtime required.
 
 ### Testing
 
@@ -87,16 +94,22 @@ cd frontend
 npm test
 ```
 
-**Backend**:
+**Backend** (38 tests):
 ```bash
-pytest tests/
+# Run all tests
+cargo test
+
+# Run with output
+cargo test -- --nocapture
+
+# Run specific test suite
+cargo test crypto
+cargo test integration
 ```
 
-**Linting**:
+**Frontend Linting**:
 ```bash
 cd frontend && npm run lint
-ruff check src tests
-ruff format --check src tests
 ```
 
 ## 🌐 Deployment
@@ -105,7 +118,7 @@ ruff format --check src tests
 
 Confort+ is designed for production deployment with:
 - **Frontend**: Vercel hosting (PWA with automatic builds)
-- **Backend**: FastAPI server (AWS, Railway, Render, or similar)
+- **Backend**: Compiled Rust binary (AWS, Railway, Render, DigitalOcean, or similar)
 - **Database**: Supabase PostgreSQL
 - **Payment Processing**: CinetPay and Binance Pay webhooks
 
@@ -118,9 +131,11 @@ Confort+ is designed for production deployment with:
    - Deploy automatically on push
 
 2. **Backend Deployment**:
-   - Deploy Python app to your preferred hosting (AWS, Railway, Render)
-   - Set production environment variables
+   - Build release binary: `cargo build --release`
+   - Deploy `target/release/confort` binary to your hosting platform
+   - Set production environment variables (SUPABASE_URL, SUPABASE_SERVICE_KEY, API keys, etc.)
    - Configure webhooks with CinetPay and Binance Pay
+   - Run binary: `./confort` (listens on 0.0.0.0:8000)
 
 3. **Complete Setup**:
    See [DEPLOYMENT.md](./DEPLOYMENT.md) for comprehensive step-by-step instructions.
