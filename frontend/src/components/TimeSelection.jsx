@@ -40,12 +40,12 @@ export function TimeSelection({ selectedSlot, onSelectSlot }) {
   }
 
   return (
-    <div className="w-full space-y-10">
-      <div className="text-center space-y-2 mb-8">
-        <h1 className="text-3xl font-bold text-white neon-glow">
+    <div className="w-full space-y-6 md:space-y-10">
+      <div className="text-center space-y-2 mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white neon-glow">
           {t('welcome')}
         </h1>
-        <h2 className="text-2xl font-semibold text-neon-cyan neon-glow">
+        <h2 className="text-lg md:text-2xl lg:text-3xl font-semibold text-neon-cyan neon-glow">
           {t('selectPlayTime')}
         </h2>
       </div>
@@ -54,7 +54,7 @@ export function TimeSelection({ selectedSlot, onSelectSlot }) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 md:grid-cols-3 gap-4"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4"
       >
         {timeSlots.map((slot) => (
           <motion.button
@@ -63,17 +63,17 @@ export function TimeSelection({ selectedSlot, onSelectSlot }) {
             whileHover="hover"
             whileTap={{ scale: 0.95 }}
             onClick={() => onSelectSlot(slot)}
-            className={`glass-card rounded-full p-6 transition-all duration-200 pulse-glow ${
+            className={`glass-card rounded-full p-4 md:p-6 transition-all duration-200 pulse-glow min-h-touch ${
               selectedSlot?.minutes === slot.minutes
                 ? 'bg-neon-cyan text-arcade-black border-neon-cyan shadow-neon-lg'
                 : 'text-white hover:border-neon-cyan/60 hover:bg-white/10'
             }`}
           >
-            <div className="space-y-2">
-              <div className="font-bold text-lg">
+            <div className="space-y-1 md:space-y-2">
+              <div className="font-bold text-base md:text-lg">
                 {formatTime(slot.minutes)}
               </div>
-              <div className="text-sm font-semibold">
+              <div className="text-xs md:text-sm font-semibold">
                 {slot.price} {t('fcfa')}
               </div>
             </div>

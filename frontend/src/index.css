@@ -2,9 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
+@supports (padding: max(0px)) {
+  html {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 @layer base {
   body {
     @apply bg-arcade-black text-white font-space min-h-screen antialiased;
+  }
+
+  /* Mobile-first responsive typography */
+  html {
+    @apply text-base;
+  }
+
+  @media (max-width: 639px) {
+    html {
+      @apply text-sm;
+    }
+    h1 {
+      @apply text-3xl;
+    }
+    h2 {
+      @apply text-2xl;
+    }
+    h3 {
+      @apply text-xl;
+    }
+    button {
+      @apply min-h-touch min-w-touch;
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 767px) {
+    html {
+      @apply text-base;
+    }
+    h1 {
+      @apply text-4xl;
+    }
+    h2 {
+      @apply text-3xl;
+    }
+  }
+
+  @media (min-width: 768px) {
+    html {
+      @apply text-base;
+    }
+    h1 {
+      @apply text-5xl;
+    }
+    h2 {
+      @apply text-4xl;
+    }
   }
 }
 
@@ -115,4 +171,66 @@
 
 .beat {
   animation: beat 0.6s ease-in-out infinite;
+}
+
+/* Mobile-specific animation optimizations */
+@media (max-width: 639px) {
+  /* Reduce animation complexity on mobile devices */
+  * {
+    animation-duration: 0.8s !important;
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 2.5s ease-in-out infinite;
+  }
+
+  .beat {
+    animation: beat 0.8s ease-in-out infinite;
+  }
+
+  /* Reduce particle count effects on mobile */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+  body {
+    overflow-y: auto;
+  }
+
+  h1 {
+    @apply text-2xl;
+  }
+
+  h2 {
+    @apply text-xl;
+  }
+
+  button {
+    @apply py-2 px-3;
+  }
+}
+
+/* Touch-friendly button sizing */
+button, a[role="button"], input[type="button"], input[type="submit"] {
+  @apply min-h-touch min-w-touch;
+}
+
+/* Ensure minimum tap target spacing */
+button + button,
+input + input,
+button + input,
+input + button {
+  @apply ml-2;
+}
+
+/* Prevent zoom on input focus (iOS) */
+input, textarea, select {
+  font-size: 16px;
 }
