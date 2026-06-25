@@ -19,7 +19,7 @@ export function Payment({ selectedSlot, onPaymentComplete, onBack }) {
       )
       setTransactionId(response.id)
 
-      await pollTransactionStatus(response.id, {
+      const transactionData = await pollTransactionStatus(response.id, {
         maxAttempts: 120,
         pollInterval: 500,
         onProgress: (progress) => {
@@ -28,7 +28,7 @@ export function Payment({ selectedSlot, onPaymentComplete, onBack }) {
         },
       })
 
-      onPaymentComplete(response.id)
+      onPaymentComplete(response.id, transactionData.code)
     } catch (err) {
       setError(err.message)
       setIsLoading(false)

@@ -9,6 +9,7 @@ function App() {
   const [selectedSlot, setSelectedSlot] = useState(null)
   const [step, setStep] = useState('welcome')
   const [transactionId, setTransactionId] = useState(null)
+  const [code, setCode] = useState(null)
 
   return (
     <Layout>
@@ -38,8 +39,9 @@ function App() {
           >
             <Payment
               selectedSlot={selectedSlot}
-              onPaymentComplete={(id) => {
+              onPaymentComplete={(id, paymentCode) => {
                 setTransactionId(id)
+                setCode(paymentCode)
                 setStep('success')
               }}
               onBack={() => setStep('welcome')}
@@ -51,10 +53,12 @@ function App() {
           <SuccessScreen
             selectedSlot={selectedSlot}
             transactionId={transactionId}
+            code={code}
             onRestart={() => {
               setStep('welcome')
               setSelectedSlot(null)
               setTransactionId(null)
+              setCode(null)
             }}
           />
         )}

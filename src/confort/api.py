@@ -23,6 +23,14 @@ class InitiateResponse(BaseModel):
     id: str
 
 
+class TransactionResponse(BaseModel):
+    id: str
+    status: str
+    code: str | None = None
+    time_slot: int
+    amount: int
+
+
 @app.post("/api/initiate", response_model=InitiateResponse)
 async def initiate_payment(request: InitiateRequest):
     """Create a PENDING transaction and return its ID."""
@@ -46,6 +54,33 @@ async def initiate_payment(request: InitiateRequest):
             raise HTTPException(status_code=500, detail="Failed to create transaction")
 
         return InitiateResponse(id=response.data[0]["id"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/transaction/{transaction_id}", response_model=TransactionResponse)
+async def get_transaction(transaction_id: str):
+    """Retrieve transaction details including payment status and code."""
+    supabase = get_supabase_client()
+
+    try:
+        response = supabase.table("transactions").select("*").eq(
+            "id", transaction_id
+        ).execute()
+
+        if not response.data:
+            raise HTTPException(status_code=404, detail="Transaction not found")
+
+        transaction = response.data[0]
+        return TransactionResponse(
+            id=transaction["id"],
+            status=transaction["status"],
+            code=transaction.get("code"),
+            time_slot=transaction["time_slot"],
+            amount=transaction["amount"],
+        )
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
